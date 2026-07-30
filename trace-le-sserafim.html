@@ -6651,6 +6651,17 @@ function loadProfileData() {
                     if (nameEl && nameEl.textContent === 'マッパー') elx.classList.remove('locked');
                   });
                 }
+                // 統計カード「投稿スポット」を実数に更新
+                var spotsStatEl = document.getElementById('stat-spots');
+                if (spotsStatEl) {
+                  spotsStatEl.textContent = approvedCount;
+                  var spotsCardEl = spotsStatEl.closest('.stat-card');
+                  if (spotsCardEl) {
+                    spotsCardEl.querySelectorAll('div').forEach(function(dv) {
+                      if (dv.textContent.trim() === 'Coming Soon') dv.remove();
+                    });
+                  }
+                }
                 // バッジ解除: つなぎ役・Scout・Evangelist(紹介数)
                 var ref = r.data.referral_count || 0;
                 var badgeRefMap = { 'つなぎ役': 1, 'Scout': 5, 'Evangelist': 10 };
@@ -6675,11 +6686,23 @@ function loadProfileData() {
         ]).then(function(buzzResArr) {
           var subLikes = (buzzResArr[0].data || []).reduce(function(sum, r) { return sum + (r.likes_count || 0); }, 0);
           var visitLikes = (buzzResArr[1].data || []).reduce(function(sum, r) { return sum + (r.likes_count || 0); }, 0);
-          if ((subLikes + visitLikes) >= 500) {
+          var totalLikes = subLikes + visitLikes;
+          if (totalLikes >= 500) {
             document.querySelectorAll('.badge-card').forEach(function(elx) {
               var nameEl = elx.querySelector('.badge-name');
               if (nameEl && nameEl.textContent === 'バズ投稿') elx.classList.remove('locked');
             });
+          }
+          // 統計カード「獲得いいね」を実数に更新
+          var likesStatEl = document.getElementById('stat-likes');
+          if (likesStatEl) {
+            likesStatEl.textContent = totalLikes;
+            var likesCardEl = likesStatEl.closest('.stat-card');
+            if (likesCardEl) {
+              likesCardEl.querySelectorAll('div').forEach(function(dv) {
+                if (dv.textContent.trim() === 'Coming Soon') dv.remove();
+              });
+            }
           }
         })
           .catch(function(e5) { console.warn('buzz badge error:', e5); });
