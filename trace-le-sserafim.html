@@ -6389,11 +6389,14 @@ function filterRouteRegion(el, region) {
     // image_url・source_urlをSupabaseからSPOTSにマージ
     (async () => {
       try {
-        const { data } = await getSupabaseClient().from('spots').select('name, image_url, source_url');
+        const { data } = await getSupabaseClient().from('spots').select('name, image_url, image_url_2, image_url_3, image_url_4, source_url');
         if (data) {
           data.forEach(row => {
             const spot = SPOTS.find(s => s.name === row.name);
             if (spot && row.image_url) spot.image_url = row.image_url;
+            if (spot && row.image_url_2) spot.image_url_2 = row.image_url_2;
+            if (spot && row.image_url_3) spot.image_url_3 = row.image_url_3;
+            if (spot && row.image_url_4) spot.image_url_4 = row.image_url_4;
             if (spot && row.source_url) spot.source_url = row.source_url;
           });
         }
